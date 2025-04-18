@@ -1,21 +1,25 @@
 "use client"
 
-import { useState } from "react"
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-
-// Dummy data for the bar chart
-const generateBarData = (country: string) => {
-  const categories = ["Entertainment", "Education", "Sports", "News", "Music", "Gaming", "Travel", "Technology"]
-
-  return categories.map((category) => ({
-    category,
-    likes: Math.floor(Math.random() * 100) + 20,
-    views: Math.floor(Math.random() * 1000) + 200,
-    videos: Math.floor(Math.random() * 50) + 10,
-  }))
-}
 
 const countries = ["USA", "China", "India", "Brazil", "UK", "Germany", "Japan", "Australia", "Canada", "France"]
 
@@ -28,8 +32,21 @@ const metrics = [
 export function BarChartComponent() {
   const [country, setCountry] = useState("USA")
   const [metric, setMetric] = useState("likes")
+  const [data, setData] = useState([])
 
-  const data = generateBarData(country)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/bar-data?country=${country}`)
+        setData(response.data)
+      } catch (error) {
+        console.error("Error fetching data:", error)
+        setData([]) // fallback to empty array on error
+      }
+    }
+
+    fetchData()
+  }, [country])
 
   return (
     <div className="space-y-6">
@@ -83,4 +100,3 @@ export function BarChartComponent() {
     </div>
   )
 }
-

@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import MonthYearPicker from "./month-year-picker"
 
 // Dummy data for the bar chart
 const generateBarData = (country: string) => {
@@ -60,6 +61,11 @@ export function BarChartComponent() {
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-1 block">Date Range</label>
+            <MonthYearPicker />
           </div>
         </div>
       </div>

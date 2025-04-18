@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import MonthYearPicker from "./month-year-picker"
+import dayjs from "dayjs"
 
 // Dummy data for the bar chart
 const generateBarData = (country: string) => {
@@ -29,7 +30,8 @@ const metrics = [
 export function BarChartComponent() {
   const [country, setCountry] = useState("USA")
   const [metric, setMetric] = useState("likes")
-
+  const [startDate, setStartDate] = useState(dayjs());
+  const [endDate, setEndDate] = useState(dayjs());
   const data = generateBarData(country)
 
   return (
@@ -64,8 +66,8 @@ export function BarChartComponent() {
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-1 block">Date Range</label>
-            <MonthYearPicker />
+            <label className="text-sm font-medium mb-1 block">Metric</label>
+            <MonthYearPicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
           </div>
         </div>
       </div>

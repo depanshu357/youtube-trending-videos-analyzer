@@ -8,9 +8,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { TextField, Box } from '@mui/material';
 
-const MonthYearRangePicker = () => {
-  const [startDate, setStartDate] = useState(dayjs());
-  const [endDate, setEndDate] = useState(dayjs());
+const MonthYearRangePicker = ({startDate, setStartDate, endDate, setEndDate}) => {
+//   const [startDate, setStartDate] = useState(dayjs());
+//   const [endDate, setEndDate] = useState(dayjs());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

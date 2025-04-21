@@ -20,8 +20,38 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import MonthYearPicker from "./month-year-picker"
+import dayjs from "dayjs"
 
-const countries = ["USA", "China", "India", "Brazil", "UK", "Germany", "Japan", "Australia", "Canada", "France"]
+// Country names for the dropdown
+const countries = [
+  "Brazil",
+  "Canada",
+  "Germany",
+  "France",
+  "Great Britain (UK)",
+  "India",
+  "Japan",
+  "South Korea",
+  "Mexico",
+  "Russia",
+  "USA"
+]
+
+// Mapping country names to their codes
+const countryCodeMap = {
+  "Brazil": "BR",
+  "Canada": "CA",
+  "Germany": "DE",
+  "France": "FR",
+  "Great Britain (UK)": "GB",
+  "India": "IN",
+  "Japan": "JP",
+  "South Korea": "KR",
+  "Mexico": "MX",
+  "Russia": "RU",
+  "USA": "US",
+}
 
 const metrics = [
   { value: "likes", label: "Likes (K)" },
@@ -29,24 +59,38 @@ const metrics = [
   { value: "videos", label: "Videos" },
 ]
 
+
+
 export function BarChartComponent() {
   const [country, setCountry] = useState("USA")
   const [metric, setMetric] = useState("likes")
+  // Set default startDate to January 1, 2016
+  const [startDate, setStartDate] = useState(dayjs('2016-01-01'))
+  // Set default endDate to January 1, 2022
+  const [endDate, setEndDate] = useState(dayjs('2022-01-01'))
   const [data, setData] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/api/bar-data?country=${country}`)
+        const response = await axios.get('https://171d-202-3-77-209.ngrok-free.app/bar_chart', {
+          headers: {
+            'ngrok-skip-browser-warning': true
+          },
+          params: {
+            country: countryCodeMap[country], // send code, not name
+            startDate: startDate.format("YYYY-MM"),
+            endDate: endDate.format("YYYY-MM"),
+          },
+        })
         setData(response.data)
       } catch (error) {
-        console.error("Error fetching data:", error)
-        setData([]) // fallback to empty array on error
+        console.error("Failed to fetch data:", error)
+        setData([])
       }
     }
-
     fetchData()
-  }, [country])
+  }, [country, startDate, endDate])
 
   return (
     <div className="space-y-6">
@@ -77,6 +121,16 @@ export function BarChartComponent() {
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-1 block">Date-Range</label>
+            <MonthYearPicker
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+            />
           </div>
         </div>
       </div>

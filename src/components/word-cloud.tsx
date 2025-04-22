@@ -47,8 +47,8 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
   const [words, setWords] = useState<Word[]>([]);
   const [selectedCountry, setSelectedCountry] = useState("CA");
   const [selectedCategory, setSelectedCategory] = useState("Films");
-  const [startDate, setStartDate] = useState(dayjs());
-  const [endDate, setEndDate] = useState(dayjs());
+  const [startDate, setStartDate] = useState(dayjs("2017-01"));
+  const [endDate, setEndDate] = useState(dayjs("2021-12"));
   const [loading, setLoading] = useState(true);
 
   const sortedWords = useMemo(

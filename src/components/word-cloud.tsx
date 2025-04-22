@@ -12,12 +12,6 @@ interface Word {
   value: number;
 }
 
-interface RawEntry {
-  country: string;
-  category: string;
-  tags: string;
-}
-
 type Props = {};
 
 const MAX_FONT_SIZE = 200;
@@ -25,7 +19,6 @@ const MIN_FONT_SIZE = 30;
 const MAX_FONT_WEIGHT = 700;
 const MIN_FONT_WEIGHT = 400;
 const MAX_WORDS = 150;
-const MIN_OCCURRENCE = 3;
 
 export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) => {
   const [countries] = useState([
@@ -42,22 +35,21 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
     { code: 'US', name: 'United States' },
   ]);
   const [categories] = useState<string[]>([
-    'Gaming and sports',
+    'Gaming and Sports',
     'Films',
-    'People and lifestyle',
-    'Travel and vlogs',
+    'People and Lifestyle',
+    'Travel and Vlogs',
     'Music',
     'Science and Technology',
-    'Current affairs'
+    'Current Affairs'
   ]);
 
-  const [rawData, setRawData] = useState<RawEntry[]>([]);
+  const [words, setWords] = useState<Word[]>([]);
   const [selectedCountry, setSelectedCountry] = useState("CA");
   const [selectedCategory, setSelectedCategory] = useState("Films");
-  const [words, setWords] = useState<Word[]>([]);
-
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
+  const [loading, setLoading] = useState(true);
 
   const sortedWords = useMemo(
     () => words.sort((a, b) => b.value - a.value).slice(0, MAX_WORDS),
@@ -88,46 +80,29 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
     [minOccurences, maxOccurences]
   );
 
-  const processData = useCallback(
-    (data: RawEntry[]) => {
-      const filtered = data.filter(
-        (entry) =>
-          entry.country === selectedCountry && entry.category === selectedCategory
-      );
-
-      const tagCounts: Record<string, number> = {};
-      filtered.forEach((entry) => {
-        const tags = entry.tags.split("|").map((tag) => tag.trim().toLowerCase());
-        tags.forEach((tag) => {
-          tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-        });
-      });
-
-      const wordData: Word[] = Object.entries(tagCounts)
-        .filter(([_, count]) => count >= MIN_OCCURRENCE)
-        .map(([text, value]) => ({ text, value }));
-
-      return wordData;
-    },
-    [selectedCountry, selectedCategory]
-  );
-
   useEffect(() => {
+    setLoading(true);
+    const params = {
+      country: selectedCountry,
+      category: selectedCategory,
+      startDate: startDate.format("YYYY-MM"),
+      endDate: endDate.format("YYYY-MM"),
+    };
+    console.log("Sending parameters to backend:", params);
     axios
       .get("https://171d-202-3-77-209.ngrok-free.app/word_cloud", {
+        params,
         headers: { "ngrok-skip-browser-warning": "true" },
       })
       .then((res) => {
-        setRawData(res.data);
+        setWords(res.data);
+        setLoading(false);
       })
-      .catch((err) => console.error("Error fetching data:", err));
-  }, []);
-
-  useEffect(() => {
-    if (rawData.length > 0) {
-      setWords(processData(rawData));
-    }
-  }, [rawData, selectedCountry, selectedCategory, processData]);
+      .catch((err) => {
+        console.error("Error fetching word cloud data:", err);
+        setLoading(false);
+      });
+  }, [selectedCountry, selectedCategory, startDate, endDate]);
 
   return (
     <div ref={ref} style={{ width: "900px", height: "500px" }}>
@@ -173,7 +148,9 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
         </div>
       </div>
 
-      {sortedWords.length > 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : sortedWords.length > 0 ? (
         <WordCloud
           width={1800}
           height={1000}

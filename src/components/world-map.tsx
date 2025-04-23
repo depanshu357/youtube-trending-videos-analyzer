@@ -86,13 +86,24 @@ export default function WorldMap() {
       }
     });
 
+    function formatNumber(num) {
+      if (num == null) return '';
+      if (Math.abs(num) < 1000) return num.toString();
+      const units = ["K", "M", "B", "T", "P", "E"];
+      let unit = -1;
+      let value = num;
+      while (Math.abs(value) >= 1000 && unit < units.length - 1) {
+        value /= 1000;
+        unit++;
+      }
+      return value.toFixed(1).replace(/\.00$/, '') + units[unit];
+    }
+
     function pastelize(interpolator, amount = 0.5) {
       return t => {
         const c = d3.hsl(interpolator(t));
-        // Increase lightness (l): 0 = black, 1 = white
-        // You can tweak amount (0.2-0.5) for more/less pastel
         c.l = c.l + amount * (1 - c.l);
-        c.s = c.s * 0.7; // Optionally reduce saturation for softer look
+        c.s = c.s * 0.7;
         return c.toString();
       };
     }
@@ -103,7 +114,6 @@ export default function WorldMap() {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    // Create tooltip
     const tooltip = d3.select("body")
       .append("div")
       .attr("class", "tooltip")
@@ -115,17 +125,14 @@ export default function WorldMap() {
       .style("font-size", "12px")
       .style("display", "none");
 
-    // Create color scale
     const domain = d3.extent(geojsonData.features, (d: any) => d.properties.metric);
     const [min, max] = domain;
     const colorScale = d3.scaleSequential(pastelize(d3.interpolateCool, 0.35)).domain([min, max]);
 
 
-    // Create projection and path
     const projection = d3.geoEquirectangular().fitSize([width, height], geojsonData as any);
     const path = d3.geoPath().projection(projection);
 
-    // Draw countries
     svg
       .selectAll("path")
       .data(geojsonData.features)
@@ -138,12 +145,12 @@ export default function WorldMap() {
       .on("mouseover", function (event, d: any) {
         d3.select(this).attr("stroke", "#666").attr("stroke-width", 2);
         tooltip.style("display", "block")
-          .html(`
-            <div class="font-bold mb-1">${d.properties.name}</div>
-            <div>${metric}: <b>${d.properties.metric.toLocaleString()}</b></div>
-            <div class="mt-1">Top 5 Categories:</div>
-            <div>${d.properties.topCategories.map(cat => `${cat[0]} (${cat[1].toLocaleString()})`).join("<br/>")}</div>
-          `);
+        .html(`
+          <div class="font-bold mb-1">${d.properties.name}</div>
+          <div>${metric}: <b>${formatNumber(d.properties.metric)}</b></div>
+          <div class="mt-1">Top 5 Categories:</div>
+          <div>${d.properties.topCategories.map(cat => `${cat[0]} (${formatNumber(cat[1])})`).join("<br/>")}</div>
+        `); 
       })
       .on("mousemove", function (event) {
         tooltip
@@ -155,12 +162,10 @@ export default function WorldMap() {
         tooltip.style("display", "none");
       });
 
-    // Create legend
     const legend = svg.append("g")
       .attr("class", "legend")
       .attr("transform", `translate(${width + 50}, 20)`);
 
-    // Create gradient
     const defs = svg.append("defs");
     const gradient = defs.append("linearGradient")
       .attr("id", "legend-gradient")
@@ -171,16 +176,14 @@ export default function WorldMap() {
   .data(d3.range(0, 1.01, 0.1))
   .enter().append("stop")
   .attr("offset", d => `${d * 100}%`)
-  .attr("stop-color", d => pastelize(d3.interpolateCool, 0.35)(1 - d)); // <-- reverse t
+  .attr("stop-color", d => pastelize(d3.interpolateCool, 0.35)(1 - d));
 
 
-    // Add gradient rect
     legend.append("rect")
       .attr("width", 20)
       .attr("height", 360)
       .style("fill", "url(#legend-gradient)");
 
-    // Add legend axis
     const legendScale = d3.scaleLinear()
       .domain(domain)
       .range([360, 0]);

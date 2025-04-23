@@ -43,6 +43,19 @@ export function LineChart() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  function formatNumber(num) {
+    if (num == null) return '';
+    if (Math.abs(num) < 1000) return num.toString();
+    const units = ["K", "M", "B", "T", "P", "E"];
+    let unit = -1;
+    let value = num;
+    while (Math.abs(value) >= 1000 && unit < units.length - 1) {
+      value /= 1000;
+      unit++;
+    }
+    return value.toFixed(1).replace(/\.00$/, '') + units[unit];
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
@@ -155,9 +168,9 @@ export function LineChart() {
                 tick={{ fontSize: 12 }}
                 interval="preserveStartEnd"
               />
-              <YAxis />
+              <YAxis tickFormatter={formatNumber} />
               <Tooltip
-                formatter={(value) => [value.toLocaleString(), 'Value']}
+                formatter={(value) => [formatNumber(value), 'Value']}
                 labelFormatter={(label) => `Month: ${label}`}
               />
               <Legend />

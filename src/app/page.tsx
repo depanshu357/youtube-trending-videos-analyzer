@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 // import { LineChart } from "@/components/line-chart"
-// import { HeatMap } from "@/components/heat-map"
+import { HeatMap } from "@/components/heat-map"
 // import { GlobeMap } from "@/components/globe-map"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
@@ -77,8 +77,8 @@ export default function Dashboard() {
                 Heat map showing how YouTube categories perform across different countries
               </CardDescription>
             </CardHeader>
-            <CardContent className="h-[400px]">
-              {/* <HeatMap /> */}
+            <CardContent className="h-[700px]">
+              {<HeatMap />}
             </CardContent>
           </Card>
         </TabsContent>

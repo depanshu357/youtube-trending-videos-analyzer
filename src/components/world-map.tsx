@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import axios from "axios";
 import MonthYearRangePicker from "./month-year-picker";
 import dayjs from "dayjs";
@@ -8,7 +9,7 @@ import dayjs from "dayjs";
 const GEOJSON_URL =
   "https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/natural-earth-countries-1_110m@public/exports/geojson?lang=en&timezone=Europe%2FBerlin";
 
-const METRIC_OPTIONS = [
+const METRICS = [
   { value: "likes", label: "Likes" },
   { value: "views", label: "Views" },
   { value: "comments", label: "Comments" },
@@ -206,19 +207,19 @@ export default function WorldMap() {
         />
       </div>
 
-      <div>
-        <label className="text-sm font-medium mb-2 block">Select Metric</label>
-        <select
-          value={metric}
-          onChange={(e) => setMetric(e.target.value)}
-          className="border rounded-md px-3 py-2 w-full max-w-[200px]"
-        >
-          {METRIC_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+      <div className="flex flex-col sm:flex-row justify-between gap-4">
+        <div>
+          <label className="text-sm font-medium mb-2 block">Select Metric</label>
+          <ToggleGroup type="single" value={metric} onValueChange={(value) => value && setMetric(value)}>
+            {METRICS.map((m) => (
+              <div key={m.value}>
+              <ToggleGroupItem key={m.value} value={m.value}>
+                {m.label}
+              </ToggleGroupItem>
+              </div>
+            ))}
+          </ToggleGroup>
+        </div>
       </div>
 
       <div className="relative h-[500px]">

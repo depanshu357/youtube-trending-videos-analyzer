@@ -35,12 +35,12 @@ const routes = [
 //     href: "/heat-map",
 //     color: "text-pink-700",
 //   },
-//   {
-//     label: "Global Trends",
-//     icon: Globe,
-//     href: "/globe-map",
-//     color: "text-orange-500",
-//   },
+  {
+    label: "Global Trends",
+    icon: Globe,
+    href: "/world-map",
+    color: "text-orange-500",
+  },
   {
     label: "Country Stats",
     icon: BarChart3,

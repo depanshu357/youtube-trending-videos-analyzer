@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import Link from "next/link"
+import WorldMap from "@/components/world-map"
 
 export default function Dashboard() {
   return (
@@ -87,8 +88,8 @@ export default function Dashboard() {
               <CardTitle>Global Category Rankings</CardTitle>
               <CardDescription>Hover on countries to see top performing YouTube categories</CardDescription>
             </CardHeader>
-            <CardContent className="h-[400px]">
-              {/* <GlobeMap /> */}
+            <CardContent className="h-[550px]">
+              {<WorldMap />}
             </CardContent>
           </Card>
         </TabsContent>

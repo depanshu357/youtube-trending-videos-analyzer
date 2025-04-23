@@ -1,8 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-// import { LineChart } from "@/components/line-chart"
+import { LineChart } from "@/components/line-chart"
 import { HeatMap } from "@/components/heat-map"
-// import { GlobeMap } from "@/components/globe-map"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import Link from "next/link"
@@ -64,8 +63,8 @@ export default function Dashboard() {
               <CardTitle>Category Trends Over Time</CardTitle>
               <CardDescription>Track how different YouTube categories trend over time</CardDescription>
             </CardHeader>
-            <CardContent className="h-[400px]">
-              {/* <LineChart /> */}
+            <CardContent className="h-[550px]">
+              <LineChart />
             </CardContent>
           </Card>
         </TabsContent>

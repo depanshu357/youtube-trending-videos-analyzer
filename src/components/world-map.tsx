@@ -117,7 +117,9 @@ export default function WorldMap() {
 
     // Create color scale
     const domain = d3.extent(geojsonData.features, (d: any) => d.properties.metric);
-    const colorScale = d3.scaleSequential(pastelize(d3.interpolateCool, 0.35)).domain(domain);
+    const [min, max] = domain;
+    const colorScale = d3.scaleSequential(pastelize(d3.interpolateCool, 0.35)).domain([min, max]);
+
 
     // Create projection and path
     const projection = d3.geoEquirectangular().fitSize([width, height], geojsonData as any);
@@ -166,10 +168,11 @@ export default function WorldMap() {
       .attr("x2", "0%").attr("y2", "100%");
 
       gradient.selectAll("stop")
-      .data(d3.range(0, 1.01, 0.1))
-      .enter().append("stop")
-      .attr("offset", d => `${d * 100}%`)
-      .attr("stop-color", d => pastelize(d3.interpolateCool, 0.35)(d));
+  .data(d3.range(0, 1.01, 0.1))
+  .enter().append("stop")
+  .attr("offset", d => `${d * 100}%`)
+  .attr("stop-color", d => pastelize(d3.interpolateCool, 0.35)(1 - d)); // <-- reverse t
+
 
     // Add gradient rect
     legend.append("rect")

@@ -24,9 +24,9 @@ const routes = [
     color: "text-sky-500",
   },
   {
-    label: "Analysis",
+    label: "Trending Over Time",
     icon: LineChart,
-    href: "/analysis",
+    href: "/line-chart",
     color: "text-violet-500",
   },
   {

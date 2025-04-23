@@ -133,6 +133,11 @@ export default function WorldMap() {
     const projection = d3.geoEquirectangular().fitSize([width, height], geojsonData as any);
     const path = d3.geoPath().projection(projection);
 
+    function getMetricLabel(metric) {
+      const found = METRICS.find(m => m.value === metric);
+      return found ? found.label : metric;
+    }
+    
     svg
       .selectAll("path")
       .data(geojsonData.features)
@@ -147,7 +152,7 @@ export default function WorldMap() {
         tooltip.style("display", "block")
         .html(`
           <div class="font-bold mb-1">${d.properties.name}</div>
-          <div>${metric}: <b>${formatNumber(d.properties.metric)}</b></div>
+          <div>${getMetricLabel(metric)}: <b>${formatNumber(d.properties.metric)}</b></div>
           <div class="mt-1">Top 5 Categories:</div>
           <div>${d.properties.topCategories.map(cat => `${cat[0]} (${formatNumber(cat[1])})`).join("<br/>")}</div>
         `); 

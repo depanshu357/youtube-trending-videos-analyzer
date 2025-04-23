@@ -1,3 +1,4 @@
+"use client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LineChart } from "@/components/line-chart"
@@ -6,8 +7,63 @@ import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import Link from "next/link"
 import WorldMap from "@/components/world-map"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import dayjs from "dayjs"
 
 export default function Dashboard() {
+  const [metricsData, setMetricsData] = useState<{
+    likes: number
+    views: number
+    comments: number
+    likesChange: number | null
+    viewsChange: number | null
+    commentsChange: number | null
+  }>({
+    likes: 0,
+    views: 0,
+    comments: 0,
+    likesChange: null,
+    viewsChange: null,
+    commentsChange: null
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const currentMonth = dayjs("2020-04")
+        const previousMonth = dayjs("2020-04").subtract(1, 'month')
+  
+        const [currentRes, previousRes] = await Promise.all([
+          axios.get("https://171d-202-3-77-209.ngrok-free.app/month_specific", {
+            params: { month: currentMonth.format("YYYY-MM") },
+            headers: { "ngrok-skip-browser-warning": "true" }
+          }),
+          axios.get("https://171d-202-3-77-209.ngrok-free.app/month_specific", {
+            params: { month: previousMonth.format("YYYY-MM") },
+            headers: { "ngrok-skip-browser-warning": "true" }
+          })
+        ])
+  
+        const calcChange = (current: number, previous: number) => 
+          previous === 0 ? null : ((current - previous) / previous) * 100
+  
+        setMetricsData({
+          likes: currentRes.data.totals.likes,
+          views: currentRes.data.totals.views,
+          comments: currentRes.data.totals.comments,
+          likesChange: calcChange(currentRes.data.totals.likes, previousRes.data.totals.likes),
+          viewsChange: calcChange(currentRes.data.totals.views, previousRes.data.totals.views),
+          commentsChange: calcChange(currentRes.data.totals.comments, previousRes.data.totals.comments)
+        })
+      } catch (err) {
+        console.error("Failed to fetch metrics:", err)
+      }
+    }
+  
+    fetchData()
+  }, [])
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -22,34 +78,62 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2.4B</div>
-            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Likes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">482M</div>
-            <p className="text-xs text-muted-foreground">+15.2% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Trending Categories</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">Music is trending</p>
-          </CardContent>
-        </Card>
+  <Card>
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-sm font-medium">Total Views</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">
+        {new Intl.NumberFormat('en-US', {
+          notation: "compact",
+          maximumFractionDigits: 1
+        }).format(metricsData.views)}
       </div>
+      <p className="text-xs text-muted-foreground">
+        {metricsData.viewsChange ? 
+          `${metricsData.viewsChange >= 0 ? '+' : ''}${metricsData.viewsChange.toFixed(1)}% from last month` : 
+          'No previous data'}
+      </p>
+    </CardContent>
+  </Card>
+  <Card>
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-sm font-medium">Total Likes</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">
+        {new Intl.NumberFormat('en-US', {
+          notation: "compact",
+          maximumFractionDigits: 1
+        }).format(metricsData.likes)}
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {metricsData.likesChange ? 
+          `${metricsData.likesChange >= 0 ? '+' : ''}${metricsData.likesChange.toFixed(1)}% from last month` : 
+          'No previous data'}
+      </p>
+    </CardContent>
+  </Card>
+  <Card>
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-sm font-medium">Total Comments</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold">
+        {new Intl.NumberFormat('en-US', {
+          notation: "compact",
+          maximumFractionDigits: 1
+        }).format(metricsData.comments)}
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {metricsData.commentsChange ? 
+          `${metricsData.commentsChange >= 0 ? '+' : ''}${metricsData.commentsChange.toFixed(1)}% from last month` : 
+          'No previous data'}
+      </p>
+    </CardContent>
+  </Card>
+</div>
+
 
       <Tabs defaultValue="line" className="space-y-4">
         <TabsList>

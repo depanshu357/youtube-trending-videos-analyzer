@@ -29,6 +29,20 @@ export function CorrelationMatrix() {
   const [matrix, setMatrix] = useState<any[]>([]);
   const [rawData, setRawData] = useState([]);
   const [startDate, setStartDate] = useState(dayjs("2016-01-01"));
+  const [countries] = useState([
+    { code: "BR", name: "Brazil" },
+    { code: "CA", name: "Canada" },
+    { code: "DE", name: "Germany" },
+    { code: "FR", name: "France" },
+    { code: "GB", name: "United Kingdom" },
+    { code: "IN", name: "India" },
+    { code: "JP", name: "Japan" },
+    { code: "KR", name: "South Korea" },
+    { code: "MX", name: "Mexico" },
+    { code: "RU", name: "Russia" },
+    { code: "US", name: "United States" },
+  ]);
+  const [selectedCountry, setSelectedCountry] = useState("US");
   // Set default endDate to January 1, 2022
   const [endDate, setEndDate] = useState(dayjs("2022-01-01"));
   const metrics = ["likes", "views", "duration", "dislikes", "comments"];
@@ -69,6 +83,8 @@ export function CorrelationMatrix() {
           //   country: countryCodeMap[country], // send code, not name
           startDate: startDate.format("YYYY-MM"),
           endDate: endDate.format("YYYY-MM"),
+          category: category,
+          country: selectedCountry,
         },
       })
       .then((response) => {
@@ -97,7 +113,7 @@ export function CorrelationMatrix() {
         "YYYY-MM"
       )}, endDate: ${endDate.format("YYYY-MM")}`
     );
-  }, [category, startDate, endDate]);
+  }, [category, startDate, endDate, selectedCountry]);
 
   useEffect(() => {
     fetchData();
@@ -115,7 +131,7 @@ export function CorrelationMatrix() {
 
   return (
     <div className="space-y-6 bg-white">
-      <div className="flex flex-row justify-between gap-4 mb-6">
+      <div className="flex flex-row gap-4 mb-6">
         <div>
           <label className="text-sm font-medium mb-1 block">Category</label>
           <Select value={category} onValueChange={setCategory}>
@@ -126,6 +142,21 @@ export function CorrelationMatrix() {
               {categories.map((c) => (
                 <SelectItem key={c} value={c}>
                   {c}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Country</label>
+          <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
+            <SelectContent>
+              {countries.map((country) => (
+                <SelectItem key={country.code} value={country.code}>
+                  {country.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -145,34 +176,44 @@ export function CorrelationMatrix() {
       <div className="overflow-x-auto">
         <div className="min-w-[600px]">
           <div className="grid grid-cols-[auto_repeat(5,1fr)]">
-            
             {/* Header row with metrics */}
             <div className="p-2"></div>
             {metrics.map((metric) => (
-              <div key={metric} className="p-2 text-xs font-medium text-center capitalize">
+              <div
+                key={metric}
+                className="p-2 text-xs font-medium text-center capitalize"
+              >
                 {metric}
               </div>
             ))}
 
             {/* Data rows */}
-            {matrix.length === 0 ? <div>Loading...</div> : (matrix.map((row: any, i) => (
-              <React.Fragment key={row.metric}>
-                <div className="p-2 text-xs font-medium capitalize">{row.metric}</div>
-                {metrics.map((metric) => {
-                  const value = row[metric];
-                  return (
-                    <div
-                      key={`${row.metric}-${metric}`}
-                      style={{ backgroundColor: getColor(value) }}
-                      className="p-2 text-xs text-center"
-                      title={`${row.metric} vs ${metric}: ${value.toFixed(2)}`}
-                    >
-                      {value.toFixed(2)}
-                    </div>
-                  );
-                })}
-              </React.Fragment>
-            )))}
+            {matrix.length === 0 ? (
+              <div>Loading...</div>
+            ) : (
+              matrix.map((row: any, i) => (
+                <React.Fragment key={row.metric}>
+                  <div className="p-2 text-xs font-medium capitalize">
+                    {row.metric}
+                  </div>
+                  {metrics.map((metric) => {
+                    const value = row[metric];
+                    return (
+                      <div
+                        key={`${row.metric}-${metric}`}
+                        style={{ backgroundColor: getColor(value) }}
+                        className="p-2 text-xs text-center"
+                        title={`${row.metric} vs ${metric}: ${value.toFixed(
+                          2
+                        )}`}
+                      >
+                        {value.toFixed(2)}
+                      </div>
+                    );
+                  })}
+                </React.Fragment>
+              ))
+            )}
           </div>
         </div>
       </div>

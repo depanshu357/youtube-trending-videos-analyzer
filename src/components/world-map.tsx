@@ -137,28 +137,28 @@ export default function WorldMap() {
       };
     }
 
+    
     // --- Use adaptive width & height for projection and viewBox ---
-    const legendWidth = 100;
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
-
     const tooltip = d3.select("body")
-      .append("div")
-      .attr("class", "tooltip")
-      .style("position", "absolute")
-      .style("background", "white")
-      .style("padding", "8px")
-      .style("border-radius", "6px")
-      .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)")
-      .style("font-size", "12px")
-      .style("display", "none");
-
+    .append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("background", "white")
+    .style("padding", "8px")
+    .style("border-radius", "6px")
+    .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)")
+    .style("font-size", "12px")
+    .style("display", "none");
+    
     const domain = d3.extent(geojsonData.features, (d: any) => d.properties.metric);
     const [min, max] = domain;
     const colorScale = d3.scaleSequential(pastelize(d3.interpolateCool, 0.35)).domain([min, max]);
-
-    // --- Use adaptive width/height for projection ---
-    const projection = d3.geoEquirectangular().fitSize([width, height], geojsonData as any);
+    
+    const legendWidth = 100;
+    const mapWidth = width - legendWidth - 40;
+    const projection = d3.geoEquirectangular().fitSize([mapWidth, height], geojsonData as any);    
     const path = d3.geoPath().projection(projection);
 
     function getMetricLabel(metric) {
@@ -208,10 +208,9 @@ export default function WorldMap() {
         }
       });
 
-    // --- Legend position and size also adapt to width/height ---
-    const legend = svg.append("g")
+      const legend = svg.append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - legendWidth + 20}, 20)`);
+      .attr("transform", `translate(${mapWidth + 30}, 20)`);
 
     const defs = svg.append("defs");
     const gradient = defs.append("linearGradient")
@@ -287,7 +286,6 @@ export default function WorldMap() {
         </div>
       </div>
 
-      {/* --- Responsive container for SVG --- */}
       <div ref={containerRef} className="relative w-full min-h-[200px] aspect-[3/1]">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">

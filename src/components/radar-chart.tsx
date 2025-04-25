@@ -31,7 +31,7 @@ export function RadarChartComponent() {
   const [chartData, setChartData] = useState<any[]>([])
   const [metricMax, setMetricMax] = useState<Record<string, number>>({})
 
-  const [startDate, setStartDate] = useState(dayjs("2016-01-01"))
+  const [startDate, setStartDate] = useState(dayjs("2017-01-01"))
   const [endDate, setEndDate] = useState(dayjs("2022-01-01"))
 
   const [categories] = useState([

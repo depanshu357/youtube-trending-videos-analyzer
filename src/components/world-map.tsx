@@ -7,6 +7,32 @@ import MonthYearRangePicker from "./month-year-picker";
 import dayjs from "dayjs";
 import { useRouter } from 'next/navigation';
 
+// --- Custom hook to observe container size ---
+function useContainerSize() {
+  const ref = useRef(null);
+  const [size, setSize] = useState({ width: 1200, height: 400 }); // default aspect
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const handleResize = () => {
+      const rect = ref.current.getBoundingClientRect();
+      // Maintain a 3:1 aspect ratio, but you can change as needed
+      const width = rect.width;
+      const height = Math.max(rect.height, width / 3); // fallback if height is 0
+      setSize({ width, height });
+    };
+    handleResize();
+    const observer = new window.ResizeObserver(handleResize);
+    observer.observe(ref.current);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  return [ref, size];
+}
+
 const GEOJSON_URL =
   "https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/natural-earth-countries-1_110m@public/exports/geojson?lang=en&timezone=Europe%2FBerlin";
 
@@ -19,6 +45,7 @@ const METRICS = [
 
 export default function WorldMap() {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const [containerRef, { width, height }] = useContainerSize();
   const [metric, setMetric] = useState("likes");
   const [geojsonData, setGeojsonData] = useState<any>(null);
   const [backendData, setBackendData] = useState<any[]>([]);
@@ -26,6 +53,7 @@ export default function WorldMap() {
   const [error, setError] = useState("");
   const [startDate, setStartDate] = useState(dayjs("2021-01"));
   const [endDate, setEndDate] = useState(dayjs("2021-12"));
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -55,7 +83,7 @@ export default function WorldMap() {
   }, [metric, startDate, endDate]);
 
   useEffect(() => {
-    if (!geojsonData || !backendData.length) return;
+    if (!geojsonData || !backendData.length || !width || !height) return;
 
     const dataByCountry: Record<string, { total: number; topCategories: [string, number][] }> = {};
     backendData.forEach((row: any) => {
@@ -109,8 +137,7 @@ export default function WorldMap() {
       };
     }
 
-    const width = 1000;
-    const height = 400;
+    // --- Use adaptive width & height for projection and viewBox ---
     const legendWidth = 100;
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
@@ -130,7 +157,7 @@ export default function WorldMap() {
     const [min, max] = domain;
     const colorScale = d3.scaleSequential(pastelize(d3.interpolateCool, 0.35)).domain([min, max]);
 
-
+    // --- Use adaptive width/height for projection ---
     const projection = d3.geoEquirectangular().fitSize([width, height], geojsonData as any);
     const path = d3.geoPath().projection(projection);
 
@@ -138,7 +165,7 @@ export default function WorldMap() {
       const found = METRICS.find(m => m.value === metric);
       return found ? found.label : metric;
     }
-    
+
     svg
       .selectAll("path")
       .data(geojsonData.features)
@@ -156,7 +183,7 @@ export default function WorldMap() {
           <div>${getMetricLabel(metric)}: <b>${formatNumber(d.properties.metric)}</b></div>
           <div class="mt-1">Top 5 Categories:</div>
           <div>${d.properties.topCategories.map(cat => `${cat[0]} (${formatNumber(cat[1])})`).join("<br/>")}</div>
-        `); 
+        `);
       })
       .on("mousemove", function (event) {
         tooltip
@@ -170,7 +197,7 @@ export default function WorldMap() {
       .on("click", function(event, d: any) {
         const countryCode = d.properties.iso_a2;
         const countryName = inverseCountryCodeMap[countryCode];
-        
+
         if (countryName) {
           router.push(
             `/bar-chart?country=${encodeURIComponent(countryName)}` +
@@ -180,9 +207,11 @@ export default function WorldMap() {
           );
         }
       });
+
+    // --- Legend position and size also adapt to width/height ---
     const legend = svg.append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width + 50}, 20)`);
+      .attr("transform", `translate(${width - legendWidth + 20}, 20)`);
 
     const defs = svg.append("defs");
     const gradient = defs.append("linearGradient")
@@ -190,21 +219,20 @@ export default function WorldMap() {
       .attr("x1", "0%").attr("y1", "0%")
       .attr("x2", "0%").attr("y2", "100%");
 
-      gradient.selectAll("stop")
-  .data(d3.range(0, 1.01, 0.1))
-  .enter().append("stop")
-  .attr("offset", d => `${d * 100}%`)
-  .attr("stop-color", d => pastelize(d3.interpolateCool, 0.35)(1 - d));
-
+    gradient.selectAll("stop")
+      .data(d3.range(0, 1.01, 0.1))
+      .enter().append("stop")
+      .attr("offset", d => `${d * 100}%`)
+      .attr("stop-color", d => pastelize(d3.interpolateCool, 0.35)(1 - d));
 
     legend.append("rect")
       .attr("width", 20)
-      .attr("height", 360)
+      .attr("height", height - 40)
       .style("fill", "url(#legend-gradient)");
 
     const legendScale = d3.scaleLinear()
       .domain(domain)
-      .range([360, 0]);
+      .range([height - 40, 0]);
 
     const legendAxis = d3.axisRight(legendScale)
       .ticks(5)
@@ -217,9 +245,8 @@ export default function WorldMap() {
     return () => {
       tooltip.remove();
     };
-  }, [geojsonData, backendData, metric]);
+  }, [geojsonData, backendData, metric, width, height]);
 
-  const router = useRouter();
   const inverseCountryCodeMap = {
     "BR": "Brazil",
     "CA": "Canada",
@@ -233,25 +260,24 @@ export default function WorldMap() {
     "RU": "Russia",
     "US": "USA"
   };
-  
-  return (
-    <div className="space-y-6 bg-whites">
 
+  return (
+    <div className="space-y-6 bg-white">
       <div className="flex flex-col sm:flex-row gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Select Metric</label>
           <ToggleGroup type="single" value={metric} onValueChange={(value) => value && setMetric(value)}>
             {METRICS.map((m) => (
               <div key={m.value}>
-              <ToggleGroupItem key={m.value} value={m.value}>
-                {m.label}
-              </ToggleGroupItem>
+                <ToggleGroupItem key={m.value} value={m.value}>
+                  {m.label}
+                </ToggleGroupItem>
               </div>
             ))}
           </ToggleGroup>
         </div>
         <div>
-        <label className="text-sm font-medium mb-2 block">Select Date-Range</label>
+          <label className="text-sm font-medium mb-2 block">Select Date-Range</label>
           <MonthYearRangePicker
             startDate={startDate}
             setStartDate={setStartDate}
@@ -261,7 +287,8 @@ export default function WorldMap() {
         </div>
       </div>
 
-      <div className="relative w-full min-h-[300px]">
+      {/* --- Responsive container for SVG --- */}
+      <div ref={containerRef} className="relative w-full min-h-[200px] aspect-[3/1]">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <p>Loading map data...</p>
@@ -274,7 +301,7 @@ export default function WorldMap() {
           <svg
             ref={svgRef}
             className="w-full h-full"
-            viewBox="0 0 1200 500"
+            viewBox={`0 0 ${width} ${height}`}
             preserveAspectRatio="xMidYMid meet"
           />
         )}

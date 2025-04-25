@@ -1,9 +1,29 @@
+'use client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { LineChart } from "@/components/line-chart"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
+import { useRef } from "react";
+import { toPng, toJpeg } from "html-to-image"
 
 export default function LineChartPage() {
+  const matrixRef = useRef(null);
+
+  const handleExport = async () => {
+    if (matrixRef.current === null) {
+      return;
+    }
+
+    try {
+      const dataUrl = await toPng(matrixRef.current);
+      const link = document.createElement('a');
+      link.download = 'line-chart.png';
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Failed to export image', err);
+    }
+  };
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -11,7 +31,7 @@ export default function LineChartPage() {
           <h1 className="text-3xl font-bold tracking-tight">YouTube Category Trends</h1>
           <p className="text-muted-foreground">Track how different YouTube categories trend over time</p>
         </div>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={handleExport}>
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>
@@ -23,36 +43,8 @@ export default function LineChartPage() {
           <CardDescription>Select a date range to analyze YouTube category performance trends</CardDescription>
         </CardHeader>
         <CardContent className="h-[550px]">
-          <LineChart />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Trend Analysis</CardTitle>
-          <CardDescription>Key insights from the trending data</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-medium">Seasonal Patterns</h3>
-              <p className="text-sm text-muted-foreground">
-                Music videos show strong performance in summer months, while Gaming content peaks during winter.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium">Growth Categories</h3>
-              <p className="text-sm text-muted-foreground">
-                How-to & Style and Science & Tech categories have shown the most consistent growth over the past year.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium">Engagement Correlation</h3>
-              <p className="text-sm text-muted-foreground">
-                Categories with higher view counts typically show stronger subscriber growth and higher average watch
-                times.
-              </p>
-            </div>
+          <div ref={matrixRef}>
+            <LineChart />
           </div>
         </CardContent>
       </Card>

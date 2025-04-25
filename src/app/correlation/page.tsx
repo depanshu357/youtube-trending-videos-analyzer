@@ -17,6 +17,7 @@ export default function CorrelationPage() {
     }
 
     try {
+      console.log("here");
       const dataUrl = await toPng(matrixRef.current);
       const link = document.createElement('a');
       link.download = 'correlation-matrix.png';

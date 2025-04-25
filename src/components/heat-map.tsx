@@ -126,18 +126,9 @@ export function HeatMap() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Category Performance by Country</h2>
-        <MonthYearRangePicker
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-        />
-      </div>
+    <div className="space-y-6 bg-white">
 
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Select Metric</label>
           <ToggleGroup type="single" value={metric} onValueChange={(value) => value && setMetric(value)}>
@@ -149,6 +140,15 @@ export function HeatMap() {
               </div>
             ))}
           </ToggleGroup>
+        </div>
+        <div>
+        <label className="text-sm font-medium mb-2 block">Select Date-Range</label>
+          <MonthYearRangePicker
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+          />
         </div>
       </div>
 
@@ -201,11 +201,12 @@ export function HeatMap() {
         )}
       </div>
 
-      <div className="flex justify-between items-center">
-        <div className="text-xs text-muted-foreground">Low</div>
-        <div className="h-2 w-full max-w-[200px] mx-2 bg-gradient-to-r from-[hsl(200,80%,90%)] to-[hsl(200,80%,50%)]"></div>
-        <div className="text-xs text-muted-foreground">High</div>
-      </div>
+    <div className="flex items-center justify-center">
+      <div className="text-xs text-muted-foreground">Low</div>
+      <div className="h-2 w-full max-w-[200px] mx-2 bg-gradient-to-r from-[hsl(200,80%,90%)] to-[hsl(200,80%,50%)]"></div>
+      <div className="text-xs text-muted-foreground">High</div>
+    </div>
+
     </div>
   )
 }

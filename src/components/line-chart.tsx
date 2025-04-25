@@ -119,7 +119,7 @@ export function LineChart() {
   return (
     <div className="space-y-6 bg-white">
 
-      <div className="flex flex-col sm:flex-row gap-5">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Select Metric</label>
           <ToggleGroup type="single" value={metric} onValueChange={(value) => value && setMetric(value)}>
@@ -133,7 +133,7 @@ export function LineChart() {
                     </ToggleGroup>
         </div>
         <div>
-        <label className="text-sm font-medium mb-2 block">Select Date</label>
+        <label className="text-sm font-medium mb-2 block">Select Date-Range</label>
           <MonthYearRangePicker
             startDate={startDate}
             setStartDate={setStartDate}

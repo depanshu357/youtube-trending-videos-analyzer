@@ -22,6 +22,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import MonthYearPicker from "./month-year-picker"
 import dayjs from "dayjs"
+import { useSearchParams } from 'next/navigation';
 
 // Country names for the dropdown
 const countries = [
@@ -64,11 +65,31 @@ const metrics = [
 export function BarChartComponent() {
   const [country, setCountry] = useState("USA")
   const [metric, setMetric] = useState("likes")
-  // Set default startDate to January 1, 2016
   const [startDate, setStartDate] = useState(dayjs('2016-01-01'))
-  // Set default endDate to January 1, 2022
   const [endDate, setEndDate] = useState(dayjs('2022-01-01'))
   const [data, setData] = useState([])
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const urlCountry = searchParams.get('country');
+    const urlMetric = searchParams.get('metric');
+    const urlStart = searchParams.get('startDate');
+    const urlEnd = searchParams.get('endDate');
+
+    if (urlCountry && countries.includes(urlCountry)) {
+      setCountry(urlCountry);
+    }
+    if (urlMetric && metrics.some(m => m.value === urlMetric)) {
+      setMetric(urlMetric);
+    }
+    if (urlStart) {
+      setStartDate(dayjs(urlStart));
+    }
+    if (urlEnd) {
+      setEndDate(dayjs(urlEnd));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -5,6 +5,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import axios from "axios";
 import MonthYearRangePicker from "./month-year-picker";
 import dayjs from "dayjs";
+import { useRouter } from 'next/navigation';
 
 const GEOJSON_URL =
   "https://data.opendatasoft.com/api/explore/v2.1/catalog/datasets/natural-earth-countries-1_110m@public/exports/geojson?lang=en&timezone=Europe%2FBerlin";
@@ -165,8 +166,20 @@ export default function WorldMap() {
       .on("mouseout", function () {
         d3.select(this).attr("stroke", "lightblue").attr("stroke-width", 0.75);
         tooltip.style("display", "none");
+      })
+      .on("click", function(event, d: any) {
+        const countryCode = d.properties.iso_a2;
+        const countryName = inverseCountryCodeMap[countryCode];
+        
+        if (countryName) {
+          router.push(
+            `/bar-chart?country=${encodeURIComponent(countryName)}` +
+            `&metric=${metric}` +
+            `&startDate=${startDate.format("YYYY-MM")}` +
+            `&endDate=${endDate.format("YYYY-MM")}`
+          );
+        }
       });
-
     const legend = svg.append("g")
       .attr("class", "legend")
       .attr("transform", `translate(${width + 50}, 20)`);
@@ -206,6 +219,21 @@ export default function WorldMap() {
     };
   }, [geojsonData, backendData, metric]);
 
+  const router = useRouter();
+  const inverseCountryCodeMap = {
+    "BR": "Brazil",
+    "CA": "Canada",
+    "DE": "Germany",
+    "FR": "France",
+    "GB": "Great Britain (UK)",
+    "IN": "India",
+    "JP": "Japan",
+    "KR": "South Korea",
+    "MX": "Mexico",
+    "RU": "Russia",
+    "US": "USA"
+  };
+  
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">

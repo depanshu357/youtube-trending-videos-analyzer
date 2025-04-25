@@ -25,7 +25,7 @@ export default function WorldMapPage() {
             Visualize and compare content metrics across countries and time periods
           </CardDescription>
         </CardHeader>
-        <CardContent className="h-[630px]">
+        <CardContent className="h-auto">
           <WorldMap />
         </CardContent>
       </Card>

@@ -235,18 +235,9 @@ export default function WorldMap() {
   };
   
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Global Video Metrics</h2>
-        <MonthYearRangePicker
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-        />
-      </div>
+    <div className="space-y-6 bg-whites">
 
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Select Metric</label>
           <ToggleGroup type="single" value={metric} onValueChange={(value) => value && setMetric(value)}>
@@ -259,9 +250,18 @@ export default function WorldMap() {
             ))}
           </ToggleGroup>
         </div>
+        <div>
+        <label className="text-sm font-medium mb-2 block">Select Date-Range</label>
+          <MonthYearRangePicker
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+          />
+        </div>
       </div>
 
-      <div className="relative h-[500px]">
+      <div className="relative w-full min-h-[300px]">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <p>Loading map data...</p>
@@ -271,11 +271,11 @@ export default function WorldMap() {
             <p className="text-red-500">{error}</p>
           </div>
         ) : (
-          <svg 
-            ref={svgRef} 
-            width="1200" 
-            height="500" 
+          <svg
+            ref={svgRef}
+            className="w-full h-full"
             viewBox="0 0 1200 500"
+            preserveAspectRatio="xMidYMid meet"
           />
         )}
       </div>

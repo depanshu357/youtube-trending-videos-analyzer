@@ -152,9 +152,9 @@ export function HeatMap() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto relative w-full min-h-[300px]">
         {loading ? (
-          <div className="flex justify-center items-center h-40">
+          <div className="absolute inset-0 flex items-center justify-center">
             <p>Loading data...</p>
           </div>
         ) : error ? (
@@ -162,9 +162,8 @@ export function HeatMap() {
             <p className="text-red-500">{error}</p>
           </div>
         ) : (
-          <div className="min-w-[750px]">
+          <div>
             <div className="grid grid-cols-[auto_repeat(7,1fr)]">
-              {/* Header row with categories */}
               <div className="p-2 font-semibold"></div>
               {CATEGORIES.map((category) => (
                 <div key={category} className="p-2 text-xs font-medium text-center">
@@ -172,7 +171,6 @@ export function HeatMap() {
                 </div>
               ))}
 
-              {/* Data rows */}
               {COUNTRIES.map((countryCode) => {
                 const countryData = heatMapData.find((d) => d.country === countryCode) || {}
                 return (
@@ -201,11 +199,14 @@ export function HeatMap() {
         )}
       </div>
 
-    <div className="flex items-center justify-center">
-      <div className="text-xs text-muted-foreground">Low</div>
-      <div className="h-2 w-full max-w-[200px] mx-2 bg-gradient-to-r from-[hsl(200,80%,90%)] to-[hsl(200,80%,50%)]"></div>
-      <div className="text-xs text-muted-foreground">High</div>
-    </div>
+      {!loading && (
+        <div className="flex items-center justify-center">
+          <div className="text-xs text-muted-foreground">Low</div>
+          <div className="h-2 w-full max-w-[200px] mx-2 bg-gradient-to-r from-[hsl(200,80%,90%)] to-[hsl(200,80%,50%)]"></div>
+          <div className="text-xs text-muted-foreground">High</div>
+        </div>
+      )}
+
 
     </div>
   )

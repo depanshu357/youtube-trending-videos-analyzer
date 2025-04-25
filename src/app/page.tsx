@@ -31,8 +31,8 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const currentMonth = dayjs("2020-04")
-        const previousMonth = dayjs("2020-04").subtract(1, 'month')
+        const currentMonth = dayjs("2021-12")
+        const previousMonth = dayjs("2021-12").subtract(1, 'month')
   
         const [currentRes, previousRes] = await Promise.all([
           axios.get("https://171d-202-3-77-209.ngrok-free.app/month_specific", {

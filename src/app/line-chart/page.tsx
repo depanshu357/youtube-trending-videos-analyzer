@@ -42,7 +42,7 @@ export default function LineChartPage() {
           <CardTitle>Category Trends Over Time</CardTitle>
           <CardDescription>Select a date range to analyze YouTube category performance trends</CardDescription>
         </CardHeader>
-        <CardContent className="h-[550px]">
+        <CardContent className="h-auto">
           <div ref={matrixRef}>
             <LineChart />
           </div>

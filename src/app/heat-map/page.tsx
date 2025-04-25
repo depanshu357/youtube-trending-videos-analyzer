@@ -17,7 +17,7 @@ export default function HeatMapPage() {
     try {
       const dataUrl = await toPng(matrixRef.current);
       const link = document.createElement('a');
-      link.download = 'line-chart.png';
+      link.download = 'heat-map.png';
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -42,7 +42,7 @@ export default function HeatMapPage() {
           <CardTitle>Category Performance by Country</CardTitle>
           <CardDescription>Heat map showing how categories perform across different countries</CardDescription>
         </CardHeader>
-        <CardContent className="h-[700px]">
+        <CardContent className="h-auto">
           <div ref={matrixRef}>
             <HeatMap />
           </div>

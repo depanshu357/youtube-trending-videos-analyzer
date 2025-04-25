@@ -101,18 +101,44 @@ export function HeatMap() {
   const minValue = values.length ? Math.min(...values) : 0
   const maxValue = values.length ? Math.max(...values) : 1
 
-  // Function to get color intensity based on value
-  const getColor = (value: number) => {
-    if (isNaN(value) || value === undefined) return "hsl(200, 80%, 95%)"
-    
-    const normalizedValue = (value - minValue) / (maxValue - minValue) || 0
-    const hue = 200 // Blue hue
-    const saturation = 80
-    const lightness = 90 - normalizedValue * 40 // Higher values are darker, but keep colors lighter
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+// Helper to interpolate between two colors
+function interpolateColor(color1, color2, factor) {
+  const result = color1.slice();
+  for (let i = 0; i < 3; i++) {
+    result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
   }
+  return result;
+}
 
-  // Format large numbers for display
+// Convert RGB array to CSS string
+function rgbToString(rgb) {
+  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+}
+
+// Main color function: red (low) -> white (mid) -> blue (high)
+const getColor = (value) => {
+  if (isNaN(value) || value === undefined) return "rgb(240,240,240)";
+
+  const normalizedValue = (value - minValue) / (maxValue - minValue) || 0.0;
+
+  // Define muted red, white, and muted blue
+  const red = [200, 80, 80];    // Muted red
+  const white = [245, 245, 245]; // Muted white
+  const blue = [80, 120, 200];   // Muted blue
+
+  if (normalizedValue < 0.5) {
+    // Red to white
+    const t = normalizedValue / 0.5;
+    return rgbToString(interpolateColor(red, white, t));
+  } else {
+    // White to blue
+    const t = (normalizedValue - 0.5) / 0.5;
+    return rgbToString(interpolateColor(white, blue, t));
+  }
+};
+
+
+
   const formatValue = (value: number) => {
     if (value >= 1000000000) {
       return `${(value / 1000000000).toFixed(1)}B`
@@ -201,10 +227,16 @@ export function HeatMap() {
 
       {!loading && (
         <div className="flex items-center justify-center">
-          <div className="text-xs text-muted-foreground">Low</div>
-          <div className="h-2 w-full max-w-[200px] mx-2 bg-gradient-to-r from-[hsl(200,80%,90%)] to-[hsl(200,80%,50%)]"></div>
-          <div className="text-xs text-muted-foreground">High</div>
-        </div>
+        <div className="text-xs text-muted-foreground">Low</div>
+        <div
+          className="h-2 w-full max-w-[200px] mx-2"
+          style={{
+            background: "linear-gradient(to right, rgb(200,80,80), rgb(245,245,245), rgb(80,120,200))"
+          }}
+        ></div>
+        <div className="text-xs text-muted-foreground">High</div>
+      </div>
+      
       )}
 
 

@@ -45,7 +45,7 @@ export default function WordCloudPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Word Cloud Analysis</h1>
           <p className="text-muted-foreground">
-            Visualize common terms in content descriptions
+            Visualize frequent tags in YouTube videos.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={handleExport}>

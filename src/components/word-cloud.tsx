@@ -34,19 +34,20 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
     { code: 'RU', name: 'Russia' },
     { code: 'US', name: 'United States' },
   ]);
-  const [categories] = useState<string[]>([
-    'Gaming and Sports',
-    'Films',
-    'People and Lifestyle',
-    'Travel and Vlogs',
-    'Music',
-    'Science and Technology',
-    'Current Affairs'
+  const [categories] = useState([
+
+    { value: 'Gaming and Sports', label: 'Gaming and Sports' },
+    { value: 'Films', label: 'Films' },
+    { value: 'People and Lifestyle', label: 'People and Lifestyle' },
+    { value: 'Travel and Vlogs', label: 'Travel and Vlogs' },
+    { value: 'Music', label: 'Music' },
+    { value: 'Science and Technology', label: 'Science and Technology' },
+    { value: 'Current Affairs', label: 'Current Affairs' }
   ]);
 
   const [words, setWords] = useState<Word[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState("CA");
-  const [selectedCategory, setSelectedCategory] = useState("Films");
+  const [selectedCountry, setSelectedCountry] = useState("BR");
+  const [selectedCategory, setSelectedCategory] = useState("Gaming and Sports");
   const [startDate, setStartDate] = useState(dayjs("2017-01"));
   const [endDate, setEndDate] = useState(dayjs("2021-12"));
   const [loading, setLoading] = useState(true);
@@ -130,8 +131,8 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
+                <SelectItem key={category.value} value={category.value}>
+                  {category.label}
                 </SelectItem>
               ))}
             </SelectContent>

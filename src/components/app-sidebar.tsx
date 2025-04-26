@@ -60,7 +60,7 @@ const routes = [
     color: "text-blue-600",
   },
   {
-    label: "Title Word Cloud",
+    label: "Tag Word Cloud",
     icon: Cloud,
     href: "/word-cloud",
     color: "text-yellow-500",

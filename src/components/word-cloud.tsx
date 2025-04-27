@@ -106,7 +106,7 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
   }, [selectedCountry, selectedCategory, startDate, endDate]);
 
   return (
-    <div ref={ref} style={{ width: "900px", height: "500px" }}>
+    <div ref={ref} style={{ margin: "0 auto" }}>
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div>
           <label className="text-sm font-medium mb-1 block">Country</label>
@@ -149,6 +149,7 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
         </div>
       </div>
 
+      <div style={{width: "900px", margin: "0 auto"}}>
       {loading ? (
         <p>Loading...</p>
       ) : sortedWords.length > 0 ? (
@@ -166,7 +167,8 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
       ) : (
         <p>No tags found for the selected filters.</p>
       )}
-    </div>
+      </div>
+      </div>
   );
 });
 

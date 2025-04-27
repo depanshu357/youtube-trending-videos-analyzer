@@ -203,7 +203,7 @@ export default function Dashboard() {
               </Link>
               <Link href="/word-cloud">
                 <Button variant="outline" className="w-full justify-start">
-                  Video Title Word Clouds
+                  Video Tags Word Cloud
                 </Button>
               </Link>
             </div>

@@ -91,7 +91,7 @@ export const WordCloudComponent = forwardRef<HTMLDivElement, Props>(({ }, ref) =
     };
     console.log("Sending parameters to backend:", params);
     axios
-      .get("https://171d-202-3-77-209.ngrok-free.app/word_cloud", {
+      .get(process.env.NEXT_PUBLIC_BACKEND_URL + "/word_cloud", {
         params,
         headers: { "ngrok-skip-browser-warning": "true" },
       })

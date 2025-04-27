@@ -91,7 +91,7 @@ export function RadarChartComponent() {
         setLoading(true);
         setError("");
         const response = await axios.get(
-          "https://171d-202-3-77-209.ngrok-free.app/radar_chart",
+          process.env.NEXT_PUBLIC_BACKEND_URL + "/radar_chart",
           {
             headers: {
               "ngrok-skip-browser-warning": true,

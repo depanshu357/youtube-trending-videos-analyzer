@@ -75,7 +75,7 @@ export function CorrelationMatrix() {
 
   function fetchData() {
     axios
-      .get("https://171d-202-3-77-209.ngrok-free.app/corr_mat", {
+      .get(process.env.NEXT_PUBLIC_BACKEND_URL + "/corr_mat", {
         headers: {
           "ngrok-skip-browser-warning": true,
         },

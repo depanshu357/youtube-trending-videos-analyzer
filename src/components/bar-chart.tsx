@@ -94,7 +94,7 @@ export function BarChartComponent() {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const response = await axios.get('https://171d-202-3-77-209.ngrok-free.app/bar_chart', {
+        const response = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + '/bar_chart', {
           headers: { 'ngrok-skip-browser-warning': true },
           params: {
             country: countryCodeMap[country],

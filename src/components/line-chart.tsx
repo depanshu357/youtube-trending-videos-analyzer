@@ -99,7 +99,7 @@ export function LineChart() {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get("https://171d-202-3-77-209.ngrok-free.app/month_cat", {
+        const response = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/month_cat", {
           params: {
             startDate: startDate.format("YYYY-MM"),
             endDate: endDate.format("YYYY-MM"),

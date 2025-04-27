@@ -87,7 +87,7 @@ export function HeatMap() {
       setLoading(true)
       setError("")
       try {
-        const response = await axios.get("https://171d-202-3-77-209.ngrok-free.app/world_map", {
+        const response = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/world_map", {
           params: {
             startDate: startDate.format("YYYY-MM"),
             endDate: endDate.format("YYYY-MM"),

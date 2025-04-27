@@ -116,7 +116,7 @@ export function PredictionForm() {
     };
     setIsCalculating(true);
     axios
-      .post("https://171d-202-3-77-209.ngrok-free.app/predict", {
+      .post(process.env.NEXT_PUBLIC_BACKEND_URL + "/predict", {
         ...data,
         headers: { "ngrok-skip-browser-warning": "true" },
       })

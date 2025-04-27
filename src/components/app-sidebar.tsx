@@ -72,7 +72,7 @@ export default function AppSidebar() {
       <Sidebar className="p-1 bg-gray-50">
         <SidebarHeader className="border-b pb-2">
           <div className="flex items-center pl-2">
-            <h1 className="text-xl font-bold px-4 flex flex-row items-center justify-centers gap-1 w-full"><div><Image alt="YouTube" src="/youtube.png" width={60} height={20}/></div> <div>Trends</div></h1>
+            <h1 className="text-xl font-bold px-4 flex flex-row items-center gap-1 w-full"><div className="text-rose-700">YouTube</div> <div>Trends</div></h1>
             {/* <SidebarTrigger className="ml-auto" /> */}
           </div>
         </SidebarHeader>

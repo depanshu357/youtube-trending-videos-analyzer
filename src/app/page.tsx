@@ -35,11 +35,11 @@ export default function Dashboard() {
         const previousMonth = dayjs("2021-12").subtract(1, 'month')
   
         const [currentRes, previousRes] = await Promise.all([
-          axios.get("https://171d-202-3-77-209.ngrok-free.app/month_specific", {
+          axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/month_specific", {
             params: { month: currentMonth.format("YYYY-MM") },
             headers: { "ngrok-skip-browser-warning": "true" }
           }),
-          axios.get("https://171d-202-3-77-209.ngrok-free.app/month_specific", {
+          axios.get(process.env.NEXT_PUBLIC_BACKEND_URL + "/month_specific", {
             params: { month: previousMonth.format("YYYY-MM") },
             headers: { "ngrok-skip-browser-warning": "true" }
           })

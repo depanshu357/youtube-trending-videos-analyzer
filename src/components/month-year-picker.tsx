@@ -24,7 +24,7 @@ const MonthYearRangePicker = ({startDate, setStartDate, endDate, setEndDate}) =>
             textField: {
               size: 'small',
               sx: {
-                width: 170,
+                width: 179,
                 '& .MuiInputBase-root': {
                   height: 32,
                   fontSize: '0.875rem',
@@ -43,7 +43,7 @@ const MonthYearRangePicker = ({startDate, setStartDate, endDate, setEndDate}) =>
             textField: {
               size: 'small',
               sx: {
-                width: 170,
+                width: 183,
                 '& .MuiInputBase-root': {
                   height: 32,
                   fontSize: '0.875rem',

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
 import { useRef } from "react"
 import { toPng } from "html-to-image"
+import { Suspense } from "react"
 
 export default function BarChartPage() {
   const chartRef = useRef<HTMLDivElement | null>(null)
@@ -45,7 +46,9 @@ export default function BarChartPage() {
           </CardHeader>
           <CardContent className="h-[500px]">
             <div ref={chartRef}>
-              <BarChartComponent />
+              <Suspense fallback={<div>Loading chart...</div>}>
+                <BarChartComponent />
+              </Suspense>
             </div>
           </CardContent>
         </Card>

@@ -56,13 +56,18 @@ It uses a variety of powerful charts and visual tools to analyze likes, views, c
    ```bash
    npm install --force
    ```
+3. **Configure the .env file:**
+  Create a `.env` file in the root directory and set the `NEXT_PUBLIC_BACKEND_URL` to connect to the backend. You can use the following default configuration to connect to the remote backend:
+  ```bash
+  NEXT_PUBLIC_BACKEND_URL=https://171d-202-3-77-209.ngrok-free.app
+  ```
 
-3. **Run the development server:**
+4. **Run the development server:**
    ```bash
    npm run dev
    ```
 
-4. **Visit:**  
+5. **Visit:**  
    Open [http://localhost:3000](http://localhost:3000) to view the app.
 
 ## 📈 Usage

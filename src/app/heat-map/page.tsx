@@ -31,7 +31,7 @@ export default function HeatMapPage() {
           <h1 className="text-3xl font-bold tracking-tight">Heat Map Analysis</h1>
           <p className="text-muted-foreground">Category performance across different countries</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleExport}>
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>

@@ -34,7 +34,7 @@ export default function CorrelationPage() {
           <h1 className="text-3xl font-bold tracking-tight">Correlation Matrix</h1>
           <p className="text-muted-foreground">Relationships between different metrics</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleExport}>
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>

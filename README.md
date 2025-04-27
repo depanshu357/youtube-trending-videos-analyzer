@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📊 YouTube Trending Videos Analyzer
 
-## Getting Started
+**Context** This was made as a course project of CS661 under professor Soumya Dutta 
 
-First, run the development server:
+
+**YouTube Trending Videos Analyzer** is a web application built with **Next.js** that helps users explore and visualize trending YouTube video data.  
+It uses a variety of powerful charts and visual tools to analyze likes, views, comments, and dislikes across different categories and countries.
+
+## ✨ Features
+
+- 🔍 **Visual Analysis**  
+  - **Line Chart**: View trends over time.
+  - **World Map**: See how engagement varies across countries.
+  - **Word Cloud**: Explore trending keywords in video titles.
+  - **Heat Map**: Analyze engagement patterns across different times and categories.
+  - **Correlation Matrix**: Understand relationships between likes, views, comments, and dislikes.
+  - **Bar Chart**: Compare different metrics side-by-side.
+
+- 📈 **Prediction Page**  
+  - Input **tags**, **video duration**, **category**, and **country**.
+  - Get predicted **likes**, **views**, **comments**, and **dislikes**.
+  - Visualize predictions using a **bar chart** and a **pie chart**.
+
+## 🚀 Tech Stack
+
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Recharts](https://recharts.org/) (for graph visualizations)
+- [D3.js](https://d3js.org) (for map visulization and world cloud)
+- [Shadcn](https://ui.shadcn.com/) (component library in tailwind css)
+- [Machine Learning Model] (for predictions made in python)
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+/pages
+  ├── page.tsx           # Homepage
+  ├── bar-chart.tsx      # Line Chart analysis
+  ├── word-cloud.tsx      # Trending tags visualization
+  ├── world-map.tsx      # Map view
+  ├── heat-map.tsx        # Engagement heatmap
+  ├── correlation-matrix.tsx # Correlation analysis
+  ├── radar.tsx       # Radar chart
+  ├── prediction.tsx         # Likes/Views/Comments/Dislikes predictor
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/depanshu357/youtube-trending-videos-analyzer.git
+   cd youtube-trending-videos-analyzer.git
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Install dependencies:**
+   ```bash
+   npm install --force
+   ```
 
-## Learn More
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Visit:**  
+   Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📈 Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Navigate through different charts from the sidebar or menu.
+- Select **Country** and **Category** filters to refine your analysis.
+- On the **Prediction** page, enter:
+  - Tags (comma separated)
+  - Video duration (in seconds)
+  - Category
+  - Country
+- Submit to view predicted engagement metrics in a neat bar chart.
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---

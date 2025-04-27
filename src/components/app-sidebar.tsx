@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { BarChart3, Globe, Home, LineChart, Network, PieChart, Cloud, Menu } from "lucide-react"
+import { BarChart3, Globe, Home, LineChart, Network, PieChart, Cloud, Menu, Sparkles } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -23,24 +23,24 @@ const routes = [
     href: "/",
     color: "text-sky-500",
   },
-  {
-    label: "Trending Over Time",
-    icon: LineChart,
-    href: "/line-chart",
-    color: "text-violet-500",
-  },
-  {
-    label: "Country Heat Map",
-    icon: PieChart,
-    href: "/heat-map",
-    color: "text-pink-700",
-  },
-  {
-    label: "Global Trends",
-    icon: Globe,
-    href: "/world-map",
-    color: "text-orange-500",
-  },
+  // {
+  //   label: "Trending Over Time",
+  //   icon: LineChart,
+  //   href: "/line-chart",
+  //   color: "text-violet-500",
+  // },
+  // {
+  //   label: "Country Heat Map",
+  //   icon: PieChart,
+  //   href: "/heat-map",
+  //   color: "text-pink-700",
+  // },
+  // {
+  //   label: "Global Trends",
+  //   icon: Globe,
+  //   href: "/world-map",
+  //   color: "text-orange-500",
+  // },
   {
     label: "Country Stats",
     icon: BarChart3,
@@ -64,6 +64,12 @@ const routes = [
     icon: Cloud,
     href: "/word-cloud",
     color: "text-yellow-500",
+  },
+  {
+    label: "Engagement Predictor",
+    icon: Sparkles,
+    href: "/prediction",
+    color: "text-purple-500",
   },
 ]
 

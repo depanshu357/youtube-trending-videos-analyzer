@@ -32,7 +32,7 @@ export default function BarChartPage() {
           <h1 className="text-3xl font-bold tracking-tight">Country Statistics</h1>
           <p className="text-muted-foreground">Detailed category performance by country</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleExport}>
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>

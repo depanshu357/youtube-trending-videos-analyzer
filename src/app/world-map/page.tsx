@@ -33,7 +33,7 @@ export default function WorldMapPage() {
           <h1 className="text-3xl font-bold tracking-tight">World Map</h1>
           <p className="text-muted-foreground">Global distribution of video metrics by country</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleExport}>
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>

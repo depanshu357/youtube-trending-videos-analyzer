@@ -286,7 +286,7 @@ export default function WorldMap() {
         </div>
       </div>
 
-      <div ref={containerRef} className="relative w-full min-h-[200px] aspect-[3/1]">
+      <div ref={containerRef} className="relative w-full min-h-[200px] max-h-[450px] aspect-[3/1] overflow-hidden">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <p>Loading map data...</p>

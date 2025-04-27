@@ -5,6 +5,7 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import AppSidebar from "@/components/app-sidebar"
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

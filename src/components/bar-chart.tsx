@@ -115,7 +115,7 @@ export function BarChartComponent() {
   }, [country, startDate, endDate, isReady])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div>

@@ -71,10 +71,10 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold tracking-tight">YouTube Trending Analysis</h1>
           <p className="text-muted-foreground">Interactive data visualizations for YouTube trending videos</p>
         </div>
-        <Button variant="outline" size="sm">
+        {/* <Button variant="outline" size="sm">
           <Download className="mr-2 h-4 w-4" />
           Export All
-        </Button>
+        </Button> */}
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -135,7 +135,7 @@ export default function Dashboard() {
 </div>
 
 
-      <Tabs defaultValue="line" className="space-y-4">
+      <Tabs defaultValue="line" className="space-y-4 overflow-hidden">
         <TabsList>
           <TabsTrigger value="line">Trending Over Time</TabsTrigger>
           <TabsTrigger value="heat">Country Heat Map</TabsTrigger>
@@ -165,7 +165,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="globe" className="space-y-4">
+        <TabsContent value="globe" className="space-y-4 overflow-hidden">
           <Card>
             <CardHeader>
               <CardTitle>Global Category Rankings</CardTitle>
@@ -217,21 +217,21 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h3 className="font-medium">Music Video Growth</h3>
+                <h3 className="font-medium">Short Videos Growth</h3>
                 <p className="text-sm text-muted-foreground">
-                  Music videos have seen a 45% increase in engagement over the last quarter.
+                Short videos under 5 minutes achieve the highest engagement rates, with nearly 5% of viewers liking these quick-consumption videos
                 </p>
               </div>
               <div>
-                <h3 className="font-medium">Regional Preferences</h3>
+                <h3 className="font-medium">Science and Technology</h3>
                 <p className="text-sm text-muted-foreground">
-                  Educational content trends in North America and Europe, while entertainment dominates in Asia.
+                Science and Technology saw the highest growth over the past six months, rising by 14.35%.
                 </p>
               </div>
               <div>
                 <h3 className="font-medium">Engagement Patterns</h3>
                 <p className="text-sm text-muted-foreground">
-                  Videos between 8-12 minutes show the highest like-to-view ratio across all categories.
+                In almost all regions, music and films dominate total views.
                 </p>
               </div>
             </div>

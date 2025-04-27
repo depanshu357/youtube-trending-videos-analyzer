@@ -48,7 +48,7 @@ export default function WordCloudPage() {
             Visualize frequent tags in YouTube videos.
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleExport}>
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>

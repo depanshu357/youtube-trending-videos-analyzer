@@ -31,7 +31,7 @@ export default function RadarPage() {
           <h1 className="text-3xl font-bold tracking-tight">Radar Analysis</h1>
           <p className="text-muted-foreground">Multi-dimensional analysis of content categories</p>
         </div>
-        <Button variant="outline" size="sm" onClick={handleExport}>
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
           <Download className="mr-2 h-4 w-4" />
           Export
         </Button>

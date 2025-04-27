@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import axios from "axios"
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -11,11 +11,11 @@ import {
   Legend,
   Tooltip,
   PolarRadiusAxis,
-} from "recharts"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import MonthYearRangePicker from "./month-year-picker"
-import dayjs from "dayjs"
+} from "recharts";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import MonthYearRangePicker from "./month-year-picker";
+import dayjs from "dayjs";
 
 const metrics = [
   { display: "Likes", apiKey: "likes" },
@@ -23,16 +23,16 @@ const metrics = [
   { display: "Views", apiKey: "views" },
   { display: "Average Duration", apiKey: "avg_duration" },
   { display: "Dislikes", apiKey: "dislikes" },
-]
+];
 
 export function RadarChartComponent() {
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
-  const [chartData, setChartData] = useState<any[]>([])
-  const [metricMax, setMetricMax] = useState<Record<string, number>>({})
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [metricMax, setMetricMax] = useState<Record<string, number>>({});
 
-  const [startDate, setStartDate] = useState(dayjs("2017-01-01"))
-  const [endDate, setEndDate] = useState(dayjs("2022-01-01"))
+  const [startDate, setStartDate] = useState(dayjs("2017-01-01"));
+  const [endDate, setEndDate] = useState(dayjs("2022-01-01"));
 
   const [categories] = useState([
     "Current Affairs",
@@ -41,12 +41,12 @@ export function RadarChartComponent() {
     "Music",
     "People and Lifestyle",
     "Science and Technology",
-    "Travel and Vlogs"
-  ])
+    "Travel and Vlogs",
+  ]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
     "Films",
-    "Music"
-  ])
+    "Music",
+  ]);
 
   const colors = [
     "#FF6384",
@@ -56,82 +56,87 @@ export function RadarChartComponent() {
     "#9966FF",
     "#FF9F40",
     "#8BC34A",
-  ]
+  ];
 
   function transformData(apiData: any[]) {
-    const categoryMap = new Map<string, any>()
-    apiData.forEach(item => {
-      categoryMap.set(item.category, item)
-    })
+    const categoryMap = new Map<string, any>();
+    apiData.forEach((item) => {
+      categoryMap.set(item.category, item);
+    });
 
-    const newMetricMax: Record<string, number> = {}
-    metrics.forEach(metric => {
+    const newMetricMax: Record<string, number> = {};
+    metrics.forEach((metric) => {
       newMetricMax[metric.apiKey] = Math.max(
-        ...selectedCategories.map(cat => categoryMap.get(cat)?.[metric.apiKey] || 0),
+        ...selectedCategories.map(
+          (cat) => categoryMap.get(cat)?.[metric.apiKey] || 0
+        ),
         1
-      )
-    })
-    setMetricMax(newMetricMax)
+      );
+    });
+    setMetricMax(newMetricMax);
 
-    return metrics.map(metric => {
-      const result: any = { metric: metric.display }
-      selectedCategories.forEach(category => {
-        const rawValue = categoryMap.get(category)?.[metric.apiKey] || 0
-        result[category] = rawValue / newMetricMax[metric.apiKey]
-      })
-      return result
-    })
+    return metrics.map((metric) => {
+      const result: any = { metric: metric.display };
+      selectedCategories.forEach((category) => {
+        const rawValue = categoryMap.get(category)?.[metric.apiKey] || 0;
+        result[category] = rawValue / newMetricMax[metric.apiKey];
+      });
+      return result;
+    });
   }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true)
-        setError("")
-        const response = await axios.get("https://171d-202-3-77-209.ngrok-free.app/radar_chart", {
-          headers: {
-            'ngrok-skip-browser-warning': true
-          },
-          params: {
-            startDate: startDate.format("YYYY-MM"),
-            endDate: endDate.format("YYYY-MM"),
-            categories: JSON.stringify(selectedCategories),
-          },
-        })
-        setChartData(transformData(response.data))
+        setLoading(true);
+        setError("");
+        const response = await axios.get(
+          "https://171d-202-3-77-209.ngrok-free.app/radar_chart",
+          {
+            headers: {
+              "ngrok-skip-browser-warning": true,
+            },
+            params: {
+              startDate: startDate.format("YYYY-MM"),
+              endDate: endDate.format("YYYY-MM"),
+              categories: JSON.stringify(selectedCategories),
+            },
+          }
+        );
+        setChartData(transformData(response.data));
       } catch (err) {
-        setError("Failed to fetch chart data")
-        setChartData([])
-        console.error("API Error:", err)
+        setError("Failed to fetch chart data");
+        setChartData([]);
+        console.error("API Error:", err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
     if (selectedCategories.length > 0) {
-      fetchData()
+      fetchData();
     } else {
-      setChartData([])
+      setChartData([]);
     }
-  }, [startDate, endDate, selectedCategories])
+  }, [startDate, endDate, selectedCategories]);
 
-  const allSelected = selectedCategories.length === categories.length
-  const partiallySelected = selectedCategories.length > 0 && !allSelected
+  const allSelected = selectedCategories.length === categories.length;
+  const partiallySelected = selectedCategories.length > 0 && !allSelected;
 
   const toggleCategory = (category: string, checked: boolean) => {
     if (checked) {
-      setSelectedCategories((prev) => [...prev, category])
+      setSelectedCategories((prev) => [...prev, category]);
     } else {
-      setSelectedCategories((prev) => prev.filter((c) => c !== category))
+      setSelectedCategories((prev) => prev.filter((c) => c !== category));
     }
-  }
+  };
 
   const toggleAll = (checked: boolean) => {
     if (checked) {
-      setSelectedCategories(categories)
+      setSelectedCategories(categories);
     } else {
-      setSelectedCategories([])
+      setSelectedCategories([]);
     }
-  }
+  };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -139,27 +144,27 @@ export function RadarChartComponent() {
         <div className="bg-white p-2 rounded shadow text-xs">
           <div className="font-bold mb-1">{label}</div>
           {payload.map((entry: any, idx: number) => {
-            const metricObj = metrics.find(m => m.display === label)
-            const apiKey = metricObj ? metricObj.apiKey : ""
+            const metricObj = metrics.find((m) => m.display === label);
+            const apiKey = metricObj ? metricObj.apiKey : "";
             const origValue = metricMax[apiKey]
               ? Math.round(entry.value * metricMax[apiKey])
-              : entry.value
+              : entry.value;
             return (
               <div key={entry.dataKey} style={{ color: entry.color }}>
                 {entry.dataKey}: <b>{origValue.toLocaleString()}</b>
               </div>
-            )
+            );
           })}
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Category Performance Radar</h2>
+        <h2 className="text-xl font-bold"></h2>
         <MonthYearRangePicker
           startDate={startDate}
           setStartDate={setStartDate}
@@ -169,8 +174,8 @@ export function RadarChartComponent() {
       </div>
 
       <div>
-        <label className="text-sm font-medium mb-2 block">Select Categories to Compare</label>
-        <div className="flex items-center space-x-2 mb-4">
+        {/* <label className="text-sm font-medium mb-2 block">Select Categories to Compare</label> */}
+        <div className="flex items-center space-x-2 mb-4 px-4 cursor-pointer">
           <Checkbox
             id="select-all"
             checked={allSelected}
@@ -179,20 +184,26 @@ export function RadarChartComponent() {
           />
           <Label htmlFor="select-all">Select All</Label>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-2">
           {categories.map((category, index) => (
-            <div key={category} className="flex items-center space-x-2">
+            <div
+              key={category}
+              className="flex items-center p-2 bg-muted rounded-lg hover:bg-accent transition-colors space-x-3"
+            >
               <Checkbox
                 id={`category-${category}`}
                 checked={selectedCategories.includes(category)}
                 onChange={(e) => toggleCategory(category, e.target.checked)}
               />
-              <Label htmlFor={`category-${category}`} className="flex items-center">
-                <div
-                  className="w-3 h-3 rounded-full mr-1"
+              <Label
+                htmlFor={`category-${category}`}
+                className="flex items-center text-sm font-medium cursor-pointer space-x-2"
+              >
+                <span
+                  className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: colors[index % colors.length] }}
-                ></div>
-                {category}
+                ></span>
+                <span>{category}</span>
               </Label>
             </div>
           ))}
@@ -225,8 +236,8 @@ export function RadarChartComponent() {
               <PolarRadiusAxis angle={90} domain={[0, 1.2]} />
               <Tooltip content={CustomTooltip} />
               {selectedCategories.map((category) => {
-                const index = categories.indexOf(category)
-                const color = colors[index % colors.length]
+                const index = categories.indexOf(category);
+                const color = colors[index % colors.length];
                 return (
                   <Radar
                     key={category}
@@ -236,7 +247,7 @@ export function RadarChartComponent() {
                     fill={color}
                     fillOpacity={0.2}
                   />
-                )
+                );
               })}
               <Legend />
             </RadarChart>
@@ -244,5 +255,5 @@ export function RadarChartComponent() {
         )}
       </div>
     </div>
-  )
+  );
 }

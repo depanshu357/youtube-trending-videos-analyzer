@@ -15,6 +15,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 const routes = [
   {
@@ -23,24 +24,6 @@ const routes = [
     href: "/",
     color: "text-sky-500",
   },
-  // {
-  //   label: "Trending Over Time",
-  //   icon: LineChart,
-  //   href: "/line-chart",
-  //   color: "text-violet-500",
-  // },
-  // {
-  //   label: "Country Heat Map",
-  //   icon: PieChart,
-  //   href: "/heat-map",
-  //   color: "text-pink-700",
-  // },
-  // {
-  //   label: "Global Trends",
-  //   icon: Globe,
-  //   href: "/world-map",
-  //   color: "text-orange-500",
-  // },
   {
     label: "Country Stats",
     icon: BarChart3,
@@ -48,13 +31,13 @@ const routes = [
     color: "text-emerald-500",
   },
   {
-    label: "Engagement Matrix",
+    label: "Engagement",
     icon: Network,
     href: "/correlation",
     color: "text-green-700",
   },
   {
-    label: "Category Radar",
+    label: "Content Quality Compass",
     icon: PieChart,
     href: "/radar",
     color: "text-blue-600",
@@ -89,7 +72,7 @@ export default function AppSidebar() {
       <Sidebar className="p-1 bg-gray-50">
         <SidebarHeader className="border-b pb-2">
           <div className="flex items-center pl-2">
-            <h1 className="text-xl font-bold px-4">YouTube Trends</h1>
+            <h1 className="text-xl font-bold px-4 flex flex-row items-center justify-centers gap-1 w-full"><div><Image alt="YouTube" src="/youtube.png" width={60} height={20}/></div> <div>Trends</div></h1>
             {/* <SidebarTrigger className="ml-auto" /> */}
           </div>
         </SidebarHeader>

@@ -5,6 +5,9 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import axios from "axios"
 import dayjs from "dayjs"
 import MonthYearRangePicker from "./month-year-picker"
+import { toPng } from "html-to-image";
+import { Button } from "./ui/button";
+import { Download } from "lucide-react";
 
 const CATEGORIES = [
   "Current Affairs",
@@ -51,6 +54,21 @@ export function HeatMap() {
   const [error, setError] = useState("")
   const [startDate, setStartDate] = useState(dayjs("2021-01"))
   const [endDate, setEndDate] = useState(dayjs("2021-12"))
+  // const chartRef = useRef<HTMLDivElement | null>(null)
+
+  const handleExport = async () => {
+    if (!containerRef.current) return
+
+    try {
+      const dataUrl = await toPng(containerRef.current)
+      const link = document.createElement('a')
+      link.download = 'heat-map.png'
+      link.href = dataUrl
+      link.click()
+    } catch (err) {
+      console.error("Failed to export image", err)
+    }
+  }
 
   const [tooltip, setTooltip] = useState<{
     visible: boolean,
@@ -231,7 +249,7 @@ export function HeatMap() {
   };
 
   return (
-    <div className="space-y-6 bg-white">
+    <div className="space-y-6 bg-white relative">
       <div className="flex flex-col sm:flex-row gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Select Metric</label>
@@ -254,9 +272,15 @@ export function HeatMap() {
             setEndDate={setEndDate}
           />
         </div>
+        <div className="absolute right-0">
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
+          <Download className="mr-2 h-4 w-4" />
+          Export
+        </Button>
+        </div>
       </div>
 
-      <div ref={containerRef} className="overflow-x-auto relative w-full min-h-[300px]">
+      <div ref={containerRef} className="overflow-x-auto relative w-full min-h-[300px] bg-white">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <p>Loading data...</p>

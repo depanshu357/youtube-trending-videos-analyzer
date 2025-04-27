@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Line,
   LineChart as RechartsLineChart,
@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toPng } from "html-to-image";
 
 const categories = [
   "Current Affairs",
@@ -77,6 +78,20 @@ export function LineChart() {
       unit++;
     }
     return value.toFixed(1).replace(/\.00$/, '') + units[unit];
+  }
+  const chartRef = useRef<HTMLDivElement | null>(null)
+  const handleExport = async () => {
+    if (!chartRef.current) return
+
+    try {
+      const dataUrl = await toPng(chartRef.current)
+      const link = document.createElement('a')
+      link.download = 'line-chart.png'
+      link.href = dataUrl
+      link.click()
+    } catch (err) {
+      console.error("Failed to export image", err)
+    }
   }
 
   useEffect(() => {
@@ -143,7 +158,7 @@ export function LineChart() {
   return (
     <div className="space-y-6 bg-white">
 
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 relative">
         <div>
           <label className="text-sm font-medium mb-2 block">Select Metric</label>
           <ToggleGroup type="single" value={metric} onValueChange={(value) => value && setMetric(value)}>
@@ -180,9 +195,15 @@ export function LineChart() {
             setEndDate={setEndDate}
           />
         </div>
+        <div className="absolute right-0">
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
+          <Download className="mr-2 h-4 w-4" />
+          Export
+        </Button>
+        </div>
       </div>
 
-      <div className="h-[400px]">
+      <div className="h-[400px] bg-white" ref={chartRef}>
         {loading ? (
           <div className="h-full flex items-center justify-center">
             <p>Loading chart data...</p>

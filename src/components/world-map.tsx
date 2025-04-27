@@ -6,6 +6,9 @@ import axios from "axios";
 import MonthYearRangePicker from "./month-year-picker";
 import dayjs from "dayjs";
 import { useRouter } from 'next/navigation';
+import { Download } from "lucide-react";
+import { Button } from "./ui/button";
+import { toPng } from "html-to-image";
 
 // --- Custom hook to observe container size ---
 function useContainerSize() {
@@ -260,8 +263,22 @@ export default function WorldMap() {
     "US": "USA"
   };
 
+  const handleExport = async () => {
+    if (!containerRef.current) return
+
+    try {
+      const dataUrl = await toPng(containerRef.current)
+      const link = document.createElement('a')
+      link.download = 'world-map.png'
+      link.href = dataUrl
+      link.click()
+    } catch (err) {
+      console.error("Failed to export image", err)
+    }
+  }
+
   return (
-    <div className="space-y-6 bg-white">
+    <div className="space-y-6 bg-white relative">
       <div className="flex flex-col sm:flex-row gap-4">
         <div>
           <label className="text-sm font-medium mb-2 block">Select Metric</label>
@@ -284,9 +301,15 @@ export default function WorldMap() {
             setEndDate={setEndDate}
           />
         </div>
+        <div className="absolute right-0">
+        <Button variant="outline" size="sm" onClick={handleExport} className="cursor-pointer">
+          <Download className="mr-2 h-4 w-4" />
+          Export
+        </Button>
+        </div>
       </div>
 
-      <div ref={containerRef} className="relative w-full min-h-[200px] max-h-[450px] aspect-[3/1] overflow-hidden">
+      <div ref={containerRef} className="relative w-full min-h-[200px] max-h-[450px] aspect-[3/1] overflow-hidden bg-white">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <p>Loading map data...</p>

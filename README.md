@@ -77,7 +77,7 @@ It uses a variety of powerful charts and visual tools to analyze likes, views, c
 - On the **Prediction** page, enter:
   - Tags (comma separated)
   - Video duration (in seconds)
-  - Category
+  - Category 
   - Country
 - Submit to view predicted engagement metrics in a neat bar chart.
 
